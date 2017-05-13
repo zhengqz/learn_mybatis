@@ -3,6 +3,40 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hz.mapper.UserMapper">
+
+    <!-- type: User resultMap最终映射的java对象类型,id:唯一标识-->
+	<resultMap type="user" id="userResultMap">
+	    <!-- id表示查询结果集中唯一标识 -->
+	    <!-- column: 查询出来的列名 -->
+	    <!-- property 制定pojo类型中的属性名-->
+	    <id column="id_" property="id"/>
+	    <!-- 对普通列名映射定义 -->
+	    <result column="username_" property="username"/>
+	</resultMap>
+
+	<select id="findUserByIdResultMap" parameterType="int" resultMap="userResultMap">
+		select id id_, username username_ from user where id = #{id}
+	</select>
+
+	<!-- 用户信息的综合查询 -->
+	<select id="findUserList" parameterType="userQueryVo"
+		resultType="userCustom">
+		select id, username, birthday, address from user where
+		user.sex =
+		#{userCustom.sex} and user.username like
+		"%${userCustom.username}%"
+	</select>
+
+
+	<!-- 用户信息综合查询总数 -->
+	<select id="findUserCount" parameterType="userQueryVo"
+		resultType="int">
+		select count(1 )from user where user.sex =
+		#{userCustom.sex} and
+		user.username like "%${userCustom.username}%"
+
+	</select>
+
 	<select id="findUserById" parameterType="int" resultType="user">
 		select
 		* from user where id = #{id}
@@ -17,20 +51,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<selectKey keyProperty="uuid" order="BEFORE" resultType="java.lang.String">
 			select uuid()
 		</selectKey>
-<!-- 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-			select LAST_INSERT_ID()
-		</selectKey> -->
+		<!-- <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"> 
+			select LAST_INSERT_ID() </selectKey> -->
 		insert into user(username, password, birthday,address, email, uuid)
 		values(#{username}, #{password}, #{birthday}, #{address}, #{email},
 		#{uuid})
 
 	</insert>
-	
+
 	<delete id="deleteUser" parameterType="java.lang.Integer">
-	    delete from user where id = #{value}
+		delete from user where id
+		= #{value}
 	</delete>
-	
+
 	<update id="updateUser" parameterType="com.hz.po.User">
-	     update user set username=#{username}, password=#{password}, birthday=#{birthday}, address=#{address} where id = #{id}
+		update user set
+		username=#{username}, password=#{password},
+		birthday=#{birthday},
+		address=#{address} where id = #{id}
 	</update>
 </mapper>

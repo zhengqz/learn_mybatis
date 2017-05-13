@@ -1,5 +1,6 @@
 package com.hz.mapper;
 
+import java.util.List;
 import java.io.InputStream;
 
 import org.apache.ibatis.io.Resources;
@@ -10,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.hz.po.User;
+import com.hz.po.UserCustom;
+import com.hz.po.UserQueryVo;
 
 public class UserMapperTest {
 
@@ -27,6 +30,43 @@ public class UserMapperTest {
 		SqlSession session = sqlSessionFactory.openSession();
 		UserMapper userMapper = session.getMapper(UserMapper.class);
 		User user = userMapper.findUserById(1);
+		session.close();
+		System.out.println(user);
+	}
+	
+	@Test
+	public void testFindUserList() throws Exception{
+		SqlSession session = sqlSessionFactory.openSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		
+		UserQueryVo userQueryVo = new UserQueryVo();
+		UserCustom userCustom = new UserCustom();
+		userCustom.setSex(1);
+		userCustom.setUsername("王小军");
+		userQueryVo.setUserCustom(userCustom);
+		List<UserCustom> list = userMapper.findUserList(userQueryVo);
+		System.out.println(list);
+	}
+	
+	@Test
+	public void testFindUserCount() throws Exception{
+		SqlSession session = sqlSessionFactory.openSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		
+		UserQueryVo userQueryVo = new UserQueryVo();
+		UserCustom userCustom = new UserCustom();
+		userCustom.setSex(1);
+		userCustom.setUsername("王小军");
+		userQueryVo.setUserCustom(userCustom);
+		int count = userMapper.findUserCount(userQueryVo);
+		System.out.println(count);
+	}
+	
+	@Test
+	public void testFindUserByIdResultMap() throws Exception {
+		SqlSession session = sqlSessionFactory.openSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		User user = userMapper.findUserByIdResultMap(1);
 		session.close();
 		System.out.println(user);
 	}
