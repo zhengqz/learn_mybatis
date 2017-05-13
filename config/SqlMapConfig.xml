@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <properties resource="db.properties" />
+	<typeAliases>
+		<!-- <typeAlias alias="user" type="com.hz.po.User" /> -->
+		<package name="com.hz.po"/>
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="sqlmap/User.xml" />
+		<!-- <mapper resource="mapper/UserMapper.xml" /> -->
+		<!-- mapper配置文件和mapper类同名，在同一个目录下，
+		遵循mapper配置文件中的statementId和mapper类方法名一样 -->
+		<!-- <mapper class="com.hz.mapper.UserMapper" /> -->
+		<package name="com.hz.mapper"/>
+	</mappers>
+</configuration>
