@@ -29,17 +29,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and user.username like "%${userCustom.username}%"
 			</if>
 			<if test="ids != null">
-			<!-- AND (id=1 org id=10 or id=20) -->
-			    <foreach collection="ids" item="user_id" open="AND (" close=")" separator="OR">
-			        <!-- 每次遍历，需要拼接的串 -->
-			        id = #{user_id}
-			    </foreach>
+				<!-- AND (id=1 org id=10 or id=20) -->
+				<foreach collection="ids" item="user_id" open="AND (" close=")" separator="OR">
+					<!-- 每次遍历，需要拼接的串 -->
+					id = #{user_id}
+				</foreach>
+				<!-- and id in (2,7,9) -->
+		<!-- 		<foreach collection="ids" item="user_id" open="and id In(" close=")"  separator=",">
+				     #{user_id} 
+				 </foreach> -->
 			</if>
 		</if>
 	</sql>
 
 	<!-- 用户信息的综合查询 -->
-	<select id="findUserList" parameterType="userQueryVo" resultType="userCustom">
+	<select id="findUserList" parameterType="userQueryVo"
+		resultType="userCustom">
 		select id, username, birthday, address from user
 
 		<where>
@@ -52,11 +57,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<!-- 用户信息综合查询总数 -->
-	<select id="findUserCount" parameterType="userQueryVo" resultType="int">
+	<select id="findUserCount" parameterType="userQueryVo"
+		resultType="int">
 		select count(1) from user
-		where user.sex = #{userCustom.sex} and
-		user.username like
-		"%${userCustom.username}%"
+		<where>
+			<include refid="query_user_where"></include>
+		</where>
 
 	</select>
 
